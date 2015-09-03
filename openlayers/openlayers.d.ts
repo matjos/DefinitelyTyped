@@ -5,6 +5,102 @@
 
 declare module olx {
 
+
+    interface RegularShapeOptions {
+        
+        /**experimental
+            Fill style. 
+        */
+        fill?: ol.style.Fill;
+        
+        /** experimental
+        Number of points for stars and regular polygons. In case of a polygon, the number of points is the number of sides.
+        */
+        points?: number;
+
+        /**
+        experimental
+        Radius of a regular polygon.
+        */
+        radius?: number;
+
+        /**
+        experimental
+        Inner radius of a star.
+        */
+        radius1?: number;
+
+        /**
+        experimental
+        Outer radius of a star.
+        */
+        radius2?: number;
+
+        /**
+        experimental
+        Shape's angle in radians. A value of 0 will have one of the shape's point facing up.Default value is 0.
+        */
+        angle?: number;
+
+        /**experimental
+        If true integral numbers of pixels are used as the X and Y pixel coordinate when drawing the shape in the output canvas.
+        If false fractional numbers may be used.Using true allows for "sharp" rendering (no blur), while using false allows for "accurate" rendering.
+        Note that accuracy is important if the shape's position is animated. Without it, the shape may jitter noticeably. Default value is true.
+         */
+        snapToPixel?: boolean;
+    
+        /**
+        experimental    
+        Stroke style.
+        */
+        stroke?: ol.style.Stroke;
+
+        /**
+        experimental
+            Rotation in radians(positive rotation clockwise).Default is 0.
+        */
+        rotation?: number;
+    }
+
+    interface StyleOptions {
+        
+        /**
+            experimental
+            Feature property or geometry or function returning a geometry to render for this style.
+        */
+        geometry?: string;
+        
+        /**
+            experimental
+            Fill style.
+        */
+        fill?: ol.style.Fill;
+        
+        /**
+            experimental
+            Image style.
+        */
+        image?: ol.style.Image;
+
+        /**
+            experimental
+            Stroke style.
+        */
+        stroke?: ol.style.Stroke;
+
+        /**
+            experimental
+            Text style.
+        */
+        text?: ol.style.Text;
+        
+        /**
+            experimental
+            Z index.
+        */
+        zIndex?: number;
+    }
+
     interface AttributionOptions {
 
         /** HTML markup for this attribution. */
@@ -103,13 +199,13 @@ declare module olx {
         hidpi?: boolean;
 
         /** experimental The type of the remote WMS server: mapserver, geoserver or qgis. Only needed if hidpi is true. Default is undefined. */
-        serverType?: ol.source.wms.ServerType;
+        serverType?: any;
 
         /** WMS service URL. */
         url?: string;
 
         /** Logo. */
-        logo?: olx.LogoOptions;
+        logo?: any;
 
         /** experimental Projection. */
         projection?: ol.proj.ProjectionLike;
@@ -118,7 +214,7 @@ declare module olx {
     interface ImageWMSOptions extends BaseWMSOptions {
 
         /** experimental Optional function to load an image given a URL. */
-        imageLoadFunction?: ol.ImageLoadFunctionType;
+        imageLoadFunction?: any;
 
         /** Ratio. 1 means image requests are the size of the map viewport, 2 means twice the width and height of the map viewport, and so on. Must be 1 or higher. Default is 1.5. */
         ratio?: number;
@@ -139,7 +235,7 @@ declare module olx {
         maxZoom?: number;
 
         /** experimental Optional function to load a tile given a URL. */
-        tileLoadFunction?: ol.TileLoadFunctionType;
+        tileLoadFunction?: any; //todo
 
         /** WMS service urls. Use this instead of url when the WMS supports multiple urls for GetMap requests. */
         urls?: Array<string>;
@@ -147,20 +243,51 @@ declare module olx {
         /** experimental Whether to wrap the world horizontally. When set to false, only one world will be rendered. When true, tiles will be requested for one world only, but they will be wrapped horizontally to render multiple worlds. The default is true. */
         wrapX?: boolean;
     }
-    /**
-     * Object literal with config options for the map logo.
-     */
-    interface LogoOptions {
-      /**
-       * Link url for the logo. Will be followed when the logo is clicked.
-       */
-      href: string;
 
-      /**
-       * Image src for the logo
-       */
-      src: string;
+    interface VectorOptions {
 
+        /**Attributions.*/
+        attributions?: Array<ol.Attribution>;
+
+        /**Features. If provided as ol.Collection, the features in the source and the collection will stay in sync.*/
+        features?: Array<ol.Feature>;
+
+        /** experimental
+        The feature format used by the XHR feature loader when url is set.
+        Required if url is set, otherwise ignored.Default is undefined.*/
+        format?: ol.format.Feature;
+         
+        /** experimental
+        The loader function used to load features, from a remote source for example.
+        Note that the source will create and use an XHR feature loader when url is set.*/
+        loader?: ol.FeatureLoader;
+         
+        /** Logo */
+        logo?: string;
+    
+        /** experimental
+        The loading strategy to use.By default an ol.loadingstrategy.all strategy is used, a one- off strategy which loads all features at once. */
+        strategy?: ol.LoadingStrategy
+        
+        /** experimental
+        Setting this option instructs the source to use an XHR loader (see ol.featureloader.xhr) 
+        and an ol.loadingstrategy.all for a one- off download of all features from that URL.Requires format to be set as well. */
+        url?: string;
+
+        /** experimental
+        By default, an RTree is used as spatial index.When features are removed and added frequently,
+        and the total number of features is low, setting this to false may improve performance.
+        Note that ol.source.Vector#getFeaturesInExtent, ol.source.Vector#getClosestFeatureToCoordinate and
+        ol.source.Vector#getExtent cannot be used when useSpatialIndex is set to false, and
+        ol.source.Vector#forEachFeatureInExtent will loop through all features.
+        When set to false, the features will be maintained in an ol.Collection,
+        which can be retrieved through ol.source.Vector#getFeaturesCollection.
+        The default is true. */
+        useSpatialIndex?: boolean;
+
+        /** experimental
+        Wrap the world horizontally.Default is true.For vector editing across the - 180° and 180° meridians to work properly, this should be set to false.The resulting geometry coordinates will then exceed the world bounds. */
+        wrapX?: boolean;
     }
 
     interface MapOptions {
@@ -354,7 +481,7 @@ declare module olx {
         *  a {number} view resolution and an {ol.Coordinate} as arguments, and returns the {number} 
         *  resolution at the passed coordinate.
         */
-        getPointResolution?: (resolution: number, coordinate: ol.Coordinate) => number;
+        getPointResolution?: any;
     }
 
     module animation {
@@ -494,21 +621,97 @@ declare module olx {
             //TODO: Replace with olx.control.ZoomOptions
             zoomOptions?: any;
         }
-    }
 
-    module interaction {
-        interface DefaultsOptions {
-            altShiftDragRotate?: boolean;
-            doubleClickZoom?: boolean;
-            keyboard?: boolean;
-            mouseWheelZoom?: boolean;
-            shiftDragZoom?: boolean;
-            dragPan?: boolean;
-            pinchRotate?: boolean;
-            pinchZoom?: boolean;
-            zoomDelta?: number;
-            zoomDuration?: number;
-          }
+        interface MousePositionOptions {
+
+            /**
+            * CSS class name. Default is ol-mouse-position.
+            */
+            className?: string;
+
+            /**
+            * //Coordinate format.
+            */
+            coordinateFormat?: ol.CoordinateFormatType; 
+
+            /**
+            * Projection.
+            */
+            projection?: ol.proj.Projection;
+            	
+            /**
+            * experimental 
+            * Function called when the control should be re-rendered. 
+            * This is called in a requestAnimationFrame callback.
+            */
+            render?: any;
+             
+            /**
+            * Target.
+            */
+            target?: Element;
+            
+            /**
+             * Markup for undefined coordinates. Default is `` (empty string).
+             */
+            undefinedHTML?: string;
+
+        }
+
+        interface AttributionOptions {
+
+            /**
+              * experimental CSS class name. Default is ol-attribution.
+              */
+            className?: string;
+
+            /**
+              * experimental 
+              * Target.
+              */
+            target?: Element;
+
+            /**
+              * experimental
+              * Specify if attributions can be collapsed. If you use an OSM source,
+              * should be set to false — see OSM Copyright — Default is true
+              */
+            collapsible?: boolean;
+
+            /**
+              * experimental
+              * Specify if attributions should be collapsed at startup. Default is true.
+              */
+            collapsed?: boolean;
+
+            /**
+              * experimental
+              * Text label to use for the button tip. Default is Attributions
+              */
+            tipLabel?: string;
+
+            /**
+              * experimental
+              * Text label to use for the collapsed attributions button. Default is i.
+              * Instead of text, also a Node (e.g. a span element) can be used.
+              */
+            label?: any;
+
+            /**
+              * experimental
+              * Text label to use for the expanded attributions button. Default is ».
+              * Instead of text, also a Node (e.g. a span element) can be used.
+              */
+            collapseLabel?: any;
+
+            /**
+              * experimental
+              * Function called when the control should be re-rendered.
+              * This is called in a requestAnimationFrame callback.
+              */
+            render?: any;
+
+        }
     }
 
     module layer {
@@ -653,97 +856,6 @@ declare module olx {
              * Layer style. See ol.style for default style which will be used if this is not defined.
              */
             style?: ol.style.Style | Array<ol.style.Style> | any;
-        }
-    }
-
-    module source {
-
-        interface VectorOptions {
-            /**
-             * Attributions.
-             */
-            attributions?: Array<ol.Attribution>;
-
-            /**
-             * Features. If provided as {@link ol.Collection}, the features in the source
-             * and the collection will stay in sync.
-             */
-            features?: Array<ol.Feature> | ol.Collection<ol.Feature>;
-
-            /**
-             * The feature format used by the XHR feature loader when `url` is set.
-             * Required if `url` is set, otherwise ignored. Default is `undefined`.
-             */
-            format?: ol.format.Feature;
-
-            /**
-             * The loader function used to load features, from a remote source for example.
-             * Note that the source will create and use an XHR feature loader when `url` is
-             * set.
-             */
-            loader?: ol.FeatureLoader;
-
-            /**
-             * Logo.
-             */
-            logo?: string | olx.LogoOptions;
-
-            /**
-             * The loading strategy to use. By default an {@link ol.loadingstrategy.all}
-             * strategy is used, a one-off strategy which loads all features at once.
-             */
-            strategy?: ol.LoadingStrategy;
-
-            /**
-             * Setting this option instructs the source to use an XHR loader (see
-             * {@link ol.featureloader.xhr}) and an {@link ol.loadingstrategy.all} for a
-             * one-off download of all features from that URL.
-             * Requires `format` to be set as well.
-             */
-            url?: string;
-
-            /**
-             * By default, an RTree is used as spatial index. When features are removed and
-             * added frequently, and the total number of features is low, setting this to
-             * `false` may improve performance.
-             */
-            useSpatialIndex?: boolean;
-
-            /**
-             * Wrap the world horizontally. Default is `true`. For vector editing across the
-             * -180° and 180° meridians to work properly, this should be set to `false`. The
-             * resulting geometry coordinates will then exceed the world bounds.
-             */
-            wrapX?: boolean;
-        }
-    }
-
-    module style {
-
-        interface FillOptions {
-            color?: ol.Color | string;
-        }
-
-        interface StyleOptions {
-            geometry?: string | ol.geom.Geometry | ol.style.GeometryFunction;
-            fill?: ol.style.Fill;
-            image?: ol.style.Image;
-            stroke?: ol.style.Stroke;
-            text?: ol.style.Text;
-            zIndex?: number;
-        }
-
-        interface TextOptions {
-          font?: string;
-          offsetX?: number;
-          offsetY?: number;
-          scale?: number;
-          rotation?: number;
-          text?: string;
-          textAlign?: string;
-          textBaseline?: string;
-          fill?: ol.style.Fill;
-          stroke?: ol.style.Stroke;
         }
     }
 
@@ -950,10 +1062,6 @@ declare module olx {
  * A high-performance, feature-packed library for all your mapping needs.
  */
 declare module ol {
-
-    interface TileLoadFunctionType{ (image: ol.Image, url: string): void }
-    
-    interface ImageLoadFunctionType{ (image: ol.Image, url: string): void }
 
     /**
      * An attribution for a layer source.
@@ -2270,6 +2378,8 @@ declare module ol {
         interface ScaleLineUnits extends String { }
 
         class Attribution {
+            constructor(options?: olx.control.AttributionOptions);
+
         }
 
         class Control {
@@ -2279,6 +2389,9 @@ declare module ol {
         }
 
         class MousePosition {
+            constructor(options?: olx.control.MousePositionOptions);
+
+            setProjection(projection: ol.proj.Projection);
         }
 
         class OverviewMap {
@@ -2770,21 +2883,20 @@ declare module ol {
         }
 
         class MultiPoint {
+            constructor(options: any);
         }
 
         class MultiPolygon {
         }
 
-        class Point extends SimpleGeometry {
-          constructor(coordinates: ol.Coordinate, layout?: geom.GeometryLayout);
-          getCoordinates(): ol.Coordinate;
-          setCoordinates(coordinates: ol.Coordinate, opt?: geom.GeometryLayout): void;
+        class Point {
+            constructor(options: any);
         }
 
         class Polygon {
         }
 
-        class SimpleGeometry extends Geometry {
+        class SimpleGeometry {
         }
     }
 
@@ -2852,8 +2964,6 @@ declare module ol {
 
         class Snap {
         }
-
-        function defaults(opts: olx.interaction.DefaultsOptions): ol.Collection<ol.interaction.Interaction>;
     }
 
     module layer {
@@ -3387,14 +3497,7 @@ declare module ol {
         }
 
         class Vector {
-          constructor(opts: olx.source.VectorOptions)
-
-          /**
-           * Get the extent of the features currently in the source.
-           */
-          getExtent(): ol.Extent;
-
-          getFeaturesInExtent(extent: ol.Extent): ol.Feature[];
+            constructor(options: olx.VectorOptions);
         }
 
         class VectorEvent {
@@ -3425,23 +3528,11 @@ declare module ol {
         }
 
         class Circle {
+            constructor(options: any);
         }
 
-        /**
-         * Set fill style for vector features.
-         */
         class Fill {
-
-          constructor(opt_options?: olx.style.FillOptions);
-
-          getColor(): ol.Color | string;
-
-          /**
-           * Set the color.
-           */
-          setColor(color: ol.Color | string): void;
-
-          getChecksum(): string;
+            constructor(options: any);
         }
 
         class Icon {
@@ -3450,93 +3541,19 @@ declare module ol {
         class Image {
         }
 
-        interface GeometryFunction {
-          (feature: Feature): ol.geom.Geometry
-        }
-
         class RegularShape {
+            constructor(options: olx.RegularShapeOptions);
         }
 
         class Stroke {
-            constructor();
+            constructor(options: any);
         }
 
-        /**
-         * Container for vector feature rendering styles. Any changes made to the style
-         * or its children through `set*()` methods will not take effect until the
-         * feature, layer or FeatureOverlay that uses the style is re-rendered.
-         */
         class Style {
-          constructor(opts: olx.style.StyleOptions);
+            constructor(options: olx.StyleOptions);
         }
 
-        /**
-         * Set text style for vector features.
-         */
         class Text {
-          constructor(opt?: olx.style.TextOptions);
-
-          getFont(): string;
-          getOffsetX(): number;
-          getOffsetY(): number;
-          getFill(): Fill;
-          getRotation(): number;
-          getScale(): number;
-          getStroke(): Stroke;
-          getText(): string;
-          getTextAlign(): string;
-          getTextBaseline(): string;
-
-          /**
-           * Set the font.
-           */
-          setFont(font: string): void;
-
-          /**
-           * Set the x offset.
-           */
-          setOffsetX(offsetX: number): void;
-
-           /**
-            * Set the y offset.
-            */
-          setOffsetY(offsetY: number): void;
-
-          /**
-           * Set the fill.
-           */
-          setFill(fill: Fill): void;
-
-          /**
-           * Set the rotation.
-           */
-          setRotation(rotation: number): void;
-
-          /**
-           * Set the scale.
-           */
-          setScale(scale: number): void;
-
-          /**
-           * Set the stroke.
-           *
-           */
-          setStroke(stroke: Stroke): void;
-
-           /**
-            * Set the text.
-            */
-          setText(text: string): void;
-
-           /**
-            * Set the text alignment.
-            */
-          setTextAlign(textAlign: string): void;
-
-           /**
-            * Set the text baseline.
-            */
-          setTextBaseline(textBaseline: string): void;
         }
 
         /**
